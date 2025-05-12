@@ -1,0 +1,17 @@
+asgiref==3.7.2
+certifi==2025.4.26
+charset-normalizer==3.4.2
+Django==3.2.25
+idna==3.10
+joblib==1.3.2
+numpy==1.21.6
+panda==0.3.1
+Pillow==9.5.0
+pytz==2025.2
+requests==2.31.0
+scikit-learn==1.0.2
+scipy==1.7.3
+sqlparse==0.4.4
+threadpoolctl==3.1.0
+typing_extensions==4.7.1
+urllib3==2.0.7

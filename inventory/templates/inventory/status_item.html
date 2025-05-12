@@ -1,0 +1,36 @@
+{% extends 'inventory/base.html' %}
+
+{% block content %}
+<h2>Status - Check Item Status</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    <label for="id_uid_no">UID No:</label>
+    {{ form.uid_no }}
+    <button type="submit" class="button" style="margin-left: 10px;">Check Status</button>
+
+    <div style="margin-top: 15px;">
+        <a href="{% url 'dashboard' %}" class="button">Back to Dashboard</a>
+    </div>
+</form>
+
+{% if item %}
+    <hr>
+    <h3>Item Details</h3>
+    <table>
+        <tr><th>Item Name</th><td>{{ item.item_name }}</td></tr>
+        <tr><th>UID No</th><td>{{ item.uid_no }}</td></tr>
+        <tr><th>Serial Number</th><td>{{ item.serial_number }}</td></tr>
+        <tr><th>Quantity</th><td>{{ item.quantity }}</td></tr>
+        <tr><th>Status</th><td>{{ item.status }}</td></tr>
+        <tr><th>Location</th><td>{{ item.location }}</td></tr>
+        <tr><th>In Transit</th><td>{{ item.in_transit }}</td></tr>
+        {% if item.document %}
+        <tr><th>Document</th><td><a href="{{ item.document.url }}">Download</a></td></tr>
+        {% endif %}
+        {% if item.image %}
+        <tr><th>Image</th><td><img src="{{ item.image.url }}" alt="Item Image" style="max-height: 150px;"></td></tr>
+        {% endif %}
+    </table>
+{% endif %}
+{% endblock %}

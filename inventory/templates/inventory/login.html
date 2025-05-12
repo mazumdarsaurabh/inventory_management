@@ -1,0 +1,81 @@
+{% extends 'inventory/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background-image: url("{% static 'inventory/background.jpg' %}");
+        background-size: cover;
+        background-position: center;
+        height: 100vh;
+    }
+
+    .login-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 90vh;
+    }
+
+    .login-box {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 30px 40px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        width: 350px;
+    }
+
+    .login-box h2 {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    .login-box label {
+        font-weight: bold;
+    }
+
+    .login-box input {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+
+    .login-box button {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: white;
+        font-weight: bold;
+        border: none;
+        border-radius: 5px;
+    }
+
+    .login-box a {
+        display: block;
+        text-align: center;
+        margin-top: 10px;
+    }
+</style>
+
+<div class="login-container">
+    <div class="login-box">
+        <h2>Login</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <label for="username">Username:</label>
+            {{ form.username }}
+
+            <label for="password">Password:</label>
+            {{ form.password }}
+
+            <button type="submit">Login</button>
+        </form>
+        <a href="{% url 'register' %}">Don't have an account? Register here</a>
+    </div>
+</div>
+{% endblock %}

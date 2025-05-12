@@ -1,0 +1,68 @@
+{% extends 'inventory/base.html' %}
+
+{% block content %}
+<div class="dashboard-container" style="padding: 20px;">
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <!-- Left side buttons -->
+        <div>
+            <a href="{% url 'add_item' %}" class="btn">Add New Item</a>
+            <a href="{% url 'delete_item' %}" class="btn">Delete Item</a>
+            <a href="{% url 'status_item' %}" class="btn">Status</a>
+            <a href="{% url 'modify_item' %}" class="btn">Modify</a>
+        </div>
+    </div>
+
+    <table border="1" cellpadding="10" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Item Name</th>
+                <th>UID No</th>
+                <th>Serial Number</th>
+                <th>Quantity</th>
+                <th>Location</th>
+                <th>Status</th>
+                <th>Description</th>
+                <th>Document</th>
+                <th>Image</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+                <tr>
+                    <td>{{ item.category }}</td>
+                    <td>{{ item.item_name }}</td>
+                    <td>{{ item.uid_no }}</td>
+                    <td>{{ item.serial_number }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.location }}</td>
+                    <td>{{ item.status }}</td>
+                    <td>{{ item.description|default:"-" }}</td>
+                    <td>
+                        {% if item.document %}
+                            <a href="{{ item.document.url }}" target="_blank">View</a>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if item.image %}
+                            <img src="{{ item.image.url }}" alt="Item Image" style="width: 40px; height: auto;">
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="10">No inventory items found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <form method="get" style="margin-bottom: 20px;">
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Apply Filters</button>
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary">Clear Filters</a>
+    </form>
+</div>
+{% endblock %}
