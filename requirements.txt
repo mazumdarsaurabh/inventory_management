@@ -51,7 +51,6 @@ jupyterlab_server==2.27.3
 jupyterlab_widgets==3.0.13
 MarkupSafe==3.0.2
 matplotlib-inline==0.1.7
-miniBuild @ file:///C:/Users/U78664/Desktop/python_task/Pythonwork/day-09/mini_sourav
 mistune==3.1.1
 mpg @ file:///C:/USers/U78664/Desktop/python_task/myapp
 nbclient==0.10.2
