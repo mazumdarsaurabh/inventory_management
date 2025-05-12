@@ -52,7 +52,7 @@ jupyterlab_widgets==3.0.13
 MarkupSafe==3.0.2
 matplotlib-inline==0.1.7
 mistune==3.1.1
-mpg @ file:///C:/USers/U78664/Desktop/python_task/myapp
+
 nbclient==0.10.2
 nbconvert==7.16.6
 nbformat==5.10.4
