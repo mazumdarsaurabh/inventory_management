@@ -11,4 +11,5 @@ urlpatterns = [
     path('logout/', views.user_logout, name='logout'),
     path('modify/', views.modify_item, name='modify_item'),
     path('edit/<str:uid>/', views.edit_item, name='edit_item'),
+    path('export/', views.export_inventory_excel, name='export_inventory'),
 ]
