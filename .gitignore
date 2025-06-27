@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+*egg-info/
+.pytest_cache/
+
+# Django
+*.log
+*.pot
+*.mo
+*.sav
+local_settings.py
+db.sqlite3 # Your SQLite database file - DO NOT COMMIT TO PUBLIC REPOS!
+media/ # If you're uploading files, don't commit them directly
+static_collected/ # If you run collectstatic, don't commit the output
+
+# Operating System
+.DS_Store
+Thumbs.db
+.ipynb_checkpoints

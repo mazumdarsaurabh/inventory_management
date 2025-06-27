@@ -1,29 +1,24 @@
 {% extends 'inventory/base.html' %}
 
 {% block content %}
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
 <div class="dashboard-container" style="padding: 20px;">
 
-    <!-- Top Buttons -->
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <div>
-            <a href="{% url 'add_item' %}" class="btn">Add New Item</a>
-            <a href="{% url 'delete_item' %}" class="btn">Delete Item</a>
-            <a href="{% url 'status_item' %}" class="btn">Status</a>
-            <a href="{% url 'modify_item' %}" class="btn">Modify</a>
-            <a href="{% url 'export_inventory' %}" class="btn">Export to Excel</a>
+            <a href="{% url 'add_item' %}" class="btn btn-primary">Add New Item</a>
+            <a href="{% url 'delete_item_general' %}" class="btn btn-danger">Delete Item</a>
+            <a href="{% url 'status_item_general' %}" class="btn btn-warning">Status</a>
+            <a href="{% url 'modify_item' %}" class="btn btn-info">Modify Item</a>
+            <a href="{% url 'export_inventory_excel' %}" class="btn btn-secondary">Export to Excel</a>
         </div>
     </div>
 
-    <!-- Filter Form -->
-    <form method="get" style="margin-bottom: 20px; display: flex; gap: 10px; align-items: center;">
-        {{ form.item_name.label_tag }} {{ form.item_name }}
-        {{ form.status.label_tag }} {{ form.status }}
-        {{ form.location.label_tag }} {{ form.location }}
-        <button type="submit" class="btn btn-primary">Apply Filters</button>
-    </form>
-
-    <!-- Inventory Table -->
-    <table border="1" cellpadding="10" cellspacing="0">
+    <table id="inventoryTable" class="display" style="width:100%">
         <thead>
             <tr>
                 <th>Item Name</th>
@@ -39,34 +34,40 @@
         </thead>
         <tbody>
             {% for item in items %}
-                <tr>
-                    <td>{{ item.item_name }}</td>
-                    <td>{{ item.uid_no }}</td>
-                    <td>{{ item.serial_number }}</td>
-                    <td>{{ item.quantity }}</td>
-                    <td>{{ item.location }}</td>
-                    <td>{{ item.status }}</td>
-                    <td>{{ item.description|default:"-" }}</td>
-                    <td>
-                        {% if item.document %}
-                            <a href="{{ item.document.url }}" target="_blank">View</a>
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if item.image %}
-                            <img src="{{ item.image.url }}" alt="Item Image" style="width: 40px; height: auto;">
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-                </tr>
-            {% empty %}
-                <tr><td colspan="9">No inventory items found.</td></tr>
+            <tr>
+                <td>{{ item.item_name }}</td>
+                <td>{{ item.uid_no }}</td>
+                <td>{{ item.serial_number }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.location }}</td>
+                <td>{{ item.status }}</td>
+                <td>{{ item.description }}</td>
+                <td>
+                    {% if item.document %}
+                        <a href="{{ item.document.url }}" target="_blank">View Document</a>
+                    {% else %}
+                        No Doc
+                    {% endif %}
+                </td>
+                <td>
+                    {% if item.image %}
+                        <img src="{{ item.image.url }}" width="50" alt="Image of {{ item.item_name }}">
+                    {% else %}
+                        No Image
+                    {% endif %}
+                </td>
+            </tr>
             {% endfor %}
         </tbody>
     </table>
-
 </div>
+
+<script>
+    $(document).ready(function () {
+        var table = $('#inventoryTable').DataTable({
+            fixedHeader: true,
+        });
+    });
+</script>
+
 {% endblock %}
