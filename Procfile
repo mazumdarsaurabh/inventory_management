@@ -1,0 +1,1 @@
+web: gunicorn inventory_contro.wsgi:application
