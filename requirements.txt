@@ -1,22 +1,21 @@
-asgiref==3.7.2
-certifi==2025.4.26
-charset-normalizer==3.4.2
-Django==3.2.25
+asgiref==3.8.1
+certifi==2024.6.2
+charset-normalizer==3.5.0
+Django==4.2.14 # Or 4.2.x, potentially 5.x if you installed that
+dj-database-url==2.1.0
 et-xmlfile==1.1.0
-idna==3.10
-joblib==1.3.2
-numpy==1.21.6
+gunicorn==22.0.0
+idna==3.7
+joblib==1.4.2
+numpy==1.26.4 # Or 2.x.x if a newer version compatible with Python 3.12 was installed
 openpyxl==3.1.3
-pandas==1.3.5
-Pillow==9.5.0
-python-dateutil==2.9.0.post0
+pandas==2.2.2 # Or newer if compatible with Python 3.12
+Pillow==10.3.0 # Or newer if compatible with Python 3.12
+psycopg2-binary==2.9.9
 pytz==2025.2
-requests==2.31.0
-scikit-learn==1.0.2
-scipy==1.7.3
+requests==2.32.3
 six==1.17.0
 sqlparse==0.4.4
-threadpoolctl==3.1.0
-typing_extensions==4.7.1
-urllib3==2.0.7
+tzdata==2024.1
+urllib3==2.2.1
 xlwt==1.3.0
