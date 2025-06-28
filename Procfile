@@ -1,1 +1,1 @@
-web: gunicorn inventory_contro.wsgi:application
+web: gunicorn inventory_contro.inventory_contro.wsgi:application
