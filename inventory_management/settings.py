@@ -28,7 +28,7 @@ DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True' # This is correct
 
 ALLOWED_HOSTS = [
     '.render.com',
-    'your-app-name.onrender.com', # Replace with your actual Render app URL
+    'inventory-management-21.onrender.com', # Replace with your actual Render app URL
     '127.0.0.1',
     'localhost',
 ]
