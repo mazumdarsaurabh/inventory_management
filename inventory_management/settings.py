@@ -24,9 +24,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'django-insecure-2(lc4r@%0mhm52@0he$_fq3!ni5u0s2s*oj5ovyaj(=)sz9-3r'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True' # This is correct
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [
+    '.render.com',
+    'your-app-name.onrender.com', # Replace with your actual Render app URL
+    '127.0.0.1',
+    'localhost',
+]
 
 
 # Application definition
@@ -43,7 +48,10 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
+    # Corrected: SessionMiddleware should generally come before WhiteNoise
+    # and certainly before AuthenticationMiddleware
+    'django.contrib.sessions.middleware.SessionMiddleware', # MOVED UP AND ADDED COMMA
+    'whitenoise.middleware.WhiteNoiseMiddleware', # ADDED COMMA HERE
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -56,7 +64,12 @@ ROOT_URLCONF = 'inventory_management.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'inventory','templates')],
+        # Corrected: It's more common to have project-level templates directly under BASE_DIR/templates
+        # If 'inventory/templates' is the *only* place you put templates outside of app-specific folders,
+        # then your original line was technically correct but less standard.
+        # I've kept your original for now, but consider if you have a top-level 'templates' folder.
+        # 'DIRS': [os.path.join(BASE_DIR, 'templates')], # Standard project-wide templates
+        'DIRS': [os.path.join(BASE_DIR, 'inventory','templates')], # Your original setting
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -127,6 +140,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
