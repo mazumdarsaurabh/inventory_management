@@ -125,7 +125,7 @@ def delete_item_general(request): # <-- THIS FUNCTION IS NOW INCLUDED
             reason = form.cleaned_data['reason']
 
             try:
-                item = InventoryItem.objects.get(uid_number=uid) # Use your model's correct UID field name
+                item = InventoryItem.objects.get(uid_no=uid) # Use your model's correct UID field name
                 if item.quantity >= quantity:
                     item.quantity -= quantity
                     if item.quantity == 0:
@@ -152,7 +152,7 @@ def modify_item(request): # <-- THIS FUNCTION IS NOW INCLUDED
         if form.is_valid():
             uid = form.cleaned_data['uid_no']
             try:
-                item = InventoryItem.objects.get(uid_number=uid) # Use your model's UID field name (e.g., uid_number)
+                item = InventoryItem.objects.get(uid_no=uid) # Use your model's UID field name (e.g., uid_number)
                 messages.info(request, f'Found item "{item.item_name}". Redirecting to edit page.')
                 return redirect('edit_item', pk=item.pk) # Redirect to edit_item with the actual PK
             except InventoryItem.DoesNotExist:
@@ -196,7 +196,7 @@ def status_item_general(request): # <-- THIS FUNCTION IS NOW INCLUDED
         if form.is_valid():
             uid_no = form.cleaned_data['uid_no']
             try:
-                item = InventoryItem.objects.get(uid_number=uid_no) # Use your model's correct UID field name
+                item = InventoryItem.objects.get(uid_no=uid_no) # Use your model's correct UID field name
             except InventoryItem.DoesNotExist:
                 messages.error(request, f'Item with UID "{uid_no}" not found.')
                 item = None # Ensure item is None if not found

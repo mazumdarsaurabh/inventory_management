@@ -24,10 +24,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'django-insecure-2(lc4r@%0mhm52@0he$_fq3!ni5u0s2s*oj5ovyaj(=)sz9-3r'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True' # This is correct
+DEBUG = True # This is correct
 
-ALLOWED_HOSTS = ['*']
-
+ALLOWED_HOSTS = [
+    '.render.com',
+    'inventory-management-22.onrender.com', # Replace with your actual Render app URL
+    '127.0.0.1',
+    'localhost',
+]
 
 
 # Application definition
