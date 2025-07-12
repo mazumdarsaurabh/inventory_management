@@ -28,7 +28,7 @@ DEBUG = True # This is correct
 
 ALLOWED_HOSTS = [
     '.render.com',
-    'inventory-management-23.onrender.com', # Replace with your actual Render app URL
+    'inventory-management-26.onrender.com', # Replace with your actual Render app URL
     '127.0.0.1',
     'localhost',
     '10.0.2.2',
