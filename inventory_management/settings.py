@@ -31,6 +31,8 @@ ALLOWED_HOSTS = [
     'inventory-management-23.onrender.com', # Replace with your actual Render app URL
     '127.0.0.1',
     'localhost',
+    '10.0.2.2',
+    'inventory-management-25.onrender.com',
 ]
 
 
