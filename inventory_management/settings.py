@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'widget_tweaks',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -64,12 +66,8 @@ ROOT_URLCONF = 'inventory_management.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        # Corrected: It's more common to have project-level templates directly under BASE_DIR/templates
-        # If 'inventory/templates' is the *only* place you put templates outside of app-specific folders,
-        # then your original line was technically correct but less standard.
-        # I've kept your original for now, but consider if you have a top-level 'templates' folder.
-        # 'DIRS': [os.path.join(BASE_DIR, 'templates')], # Standard project-wide templates
-        'DIRS': [os.path.join(BASE_DIR, 'inventory','templates')], # Your original setting
+        
+        'DIRS': [os.path.join(BASE_DIR,'inventory','templates')], # Your original setting
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

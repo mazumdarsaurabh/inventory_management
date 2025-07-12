@@ -1,30 +1,58 @@
 {% extends 'inventory/base.html' %}
+
 {% load static %}
+{% load widget_tweaks %} {# Keep this if you're using add_class filter #}
+{% load crispy_forms_tags %} {# Add this if you want to use crispy for better rendering, otherwise remove #}
+
 
 {% block content %}
-<h2 style="margin-bottom: 20px;">Modify Inventory Item</h2>
+<h2 style="margin-bottom: 20px; text-align: center;">Modify Inventory Item</h2>
 
-<form method="POST">
+<form method="POST" style="max-width: 500px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
     {% csrf_token %}
-    <table>
-        <tr>
-            <td>{{ form.uid_no.label_tag }}</td>
-            <td>{{ form.uid_no }}</td>
-        </tr>
-    </table>
 
-    {% if form.errors %}
-        <div style="color: red; margin-top: 10px;">
-            {{ form.errors }}
+    {# CORRECTED: Use 'search_form' instead of 'form' #}
+    <div class="form-group"> {# Bootstrap class for consistent spacing #}
+        {{ search_form.uid_no.label_tag }}
+        {# Add Bootstrap's form-control class to the input field #}
+        {# The |add_class filter requires django-widget-tweaks or similar, or add manually in forms.py #}
+        {{ search_form.uid_no|add_class:"form-control" }}
+        {% if search_form.uid_no.errors %}
+            <div class="alert alert-danger mt-1"> {# Bootstrap alert for errors #}
+                {{ search_form.uid_no.errors }}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="form-group d-flex justify-content-between mt-3"> {# Flexbox for button alignment #}
+        <button type="submit" class="btn btn-primary">Find Item</button> {# Bootstrap primary button #}
+        <a href="{% url 'inventory:dashboard' %}" class="btn btn-secondary">Back to Dashboard</a> {# Bootstrap secondary button for link #}
+    </div>
+
+    {# The following section is mostly for demonstration/debugging if you *don't* redirect immediately #}
+    {# As per your current `modify_item` view, a successful find redirects to `edit_item` #}
+    {# So, the `modify_form` or `item` context here will primarily be for display if the search fails or is just loading #}
+    {% if item and not modify_form %} {# This means an item was found but we're not yet displaying the full modify form (because of redirect) #}
+        <div class="mt-4 p-3 bg-light border rounded">
+            <p class="text-success">Item found: <strong>{{ item.item_name }} (UID: {{ item.uid_no }})</strong>.</p>
+            <p>You should be redirected to the full edit page shortly.</p>
         </div>
     {% endif %}
 
-    <div style="margin-top: 15px;">
-        <button type="submit">Find Item</button>
-        <a href="{% url 'dashboard' %}">
-            <button type="button">Back to Dashboard</button>
-        </a>
-    </div>
+    {# If you later decide to handle the full modification on THIS page #}
+    {# Then you would uncomment and use 'modify_form' here #}
+    {% comment %}
+    {% if modify_form %}
+        <hr>
+        <h4>Modify Details for {{ item.item_name }}</h4>
+        <form method="POST">
+            {% csrf_token %}
+            {{ modify_form.as_p }} {# Or use crispy: {{ modify_form|crispy }} #}
+            <button type="submit" class="btn btn-success">Save Changes</button>
+        </form>
+    {% endif %}
+    {% endcomment %}
+
 </form>
 
 {% endblock %}

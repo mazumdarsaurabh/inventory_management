@@ -1,6 +1,3 @@
-
-
-
 body {
     font-family: Arial, sans-serif;
     background-color: #f5f7fa;
@@ -36,10 +33,16 @@ body {
     padding: 2em;
 }
 
+/* New or modified rule for the button container */
+/* Assuming you've added a class 'dashboard-actions' to the div holding your buttons */
+.dashboard-actions {
+    margin-bottom: 20px; /* Adjust this value to control the space below the buttons */
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 1em;
+    margin-top: 0; /* Set this to 0 or a very small value to reduce gap from table's top margin */
     background: white;
 }
 
@@ -58,19 +61,22 @@ footer {
     background-color: #eee;
     margin-top: 2em;
 }
+
 .header-bar {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
+/* This rule might be causing some space. If using .dashboard-actions, you might adjust or remove this. */
 .button-group {
-    margin: 10px 0;
+    margin: 10px 0; /* Consider reducing this or if using .dashboard-actions for button grouping, this might become redundant. */
 }
 
 .button-group a button {
     margin-right: 10px;
 }
+
 .btn {
     display: inline-block;
     padding: 8px 12px;
@@ -80,6 +86,7 @@ footer {
     text-decoration: none;
     border-radius: 4px;
 }
+
 .btn:hover {
     background-color: #0056b3;
 }
@@ -92,7 +99,7 @@ footer {
     border-radius: 4px;
     margin-right: 10px;
 }
+
 .button:hover {
     background-color: #0056b3;
 }
-

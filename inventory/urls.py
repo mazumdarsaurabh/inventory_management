@@ -1,33 +1,48 @@
-# inventory/urls.py
+# inventory_management/inventory/urls.py
 
 from django.urls import path
 from . import views
 
+app_name = 'inventory' # THIS IS CRUCIAL FOR NAMESPACING
+
 urlpatterns = [
-    path('', views.dashboard, name='dashboard'),
+    # Dashboard view - Renamed from dashboard_view to dashboard
+    path('', views.dashboard_view, name='dashboard'),
+
     path('add/', views.add_item, name='add_item'),
 
-    # 1. Update this for per-row delete:
-    path('delete/<int:pk>/', views.delete_item, name='delete_item'), # This is for delete based on PK (from table rows)
+    # Deletion views:
+    # 1. Delete specific item by its primary key (from dashboard or item details)
+    path('delete/<int:pk>/', views.delete_item_by_pk, name='delete_item_by_pk'),
+    # 2. Delete item by UID (general form)
+    path('delete_item_general/', views.delete_item_general, name='delete_item_general'),
 
-    # 2. Add this for the general delete form (if you use a top button for it):
-    path('delete_item/', views.delete_item_general, name='delete_item_general'), # This is for the general delete form
+    # Status check views:
+    # 1. Status check by UID (general form, renamed for clarity)
+    path('status_check/', views.status_check, name='status_check'),
+    # 2. Display specific item details by primary key (e.g., from dashboard click)
+    path('item_details/<int:pk>/', views.item_details, name='item_details'), # Renamed for clarity
 
-    # Same logic applies to status:
-    path('status/<int:pk>/', views.status_item, name='status_item'), # For status based on PK (from table rows)
-    path('status_item/', views.status_item_general, name='status_item_general'), # For the general status form
-
+    # User Authentication views:
     path('login/', views.user_login, name='login'),
-    path('register/', views.register, name='register'),
+    path('register/', views.user_register, name='register'), # Renamed from 'register'
     path('logout/', views.user_logout, name='logout'),
 
-    # This is for the general modify form (search by UID)
-    path('modify_item/', views.modify_item, name='modify_item'),
+    # Item Modification views:
+    # 1. Initial search for item by UID for modification (renamed for clarity)
+    path('modify_item_search/', views.modify_item, name='modify_item_search'),
+    # 2. Actual edit page for an item by its primary key
+    path('edit/<int:pk>/', views.edit_item, name='edit_item'),
 
-    # This is for editing a specific item by its primary key
-    # Make sure your edit_item view accepts 'pk' (which it does in the last views.py)
-    path('edit/<int:pk>/', views.edit_item, name='edit_item'), # Changed <str:uid> to <int:pk>
+    # Excel Export views:
+    path('export/', views.export_inventory_excel, name='export_inventory_excel'),
+    # Note: transfer_items_to_excel was for generating an Excel to fill out manually.
+    # The AJAX transfer handles updates directly now. You might keep this if you still need it.
+    path('transfer-items-to-excel/', views.transfer_items_to_excel, name='transfer_items_to_excel'),
 
-    # Export (make sure name matches what's in base.html)
-    path('export/', views.export_inventory_excel, name='export_inventory_excel'), # Changed name to _excel as per previous fix
+    # Inventory Transfer view (AJAX POST endpoint)
+    path('transfer/', views.transfer_inventory_items, name='transfer_inventory_items'),
+
+    # NEW: Logs View
+    path('logs/', views.inventory_logs, name='inventory_logs'),
 ]

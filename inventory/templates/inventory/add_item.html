@@ -2,60 +2,160 @@
 {% load static %}
 
 {% block content %}
-<h2>Add New Inventory Item</h2>
+<div class="container mt-5">
+    {# Increased box-shadow for a more "3D" or elevated look #}
+    <div class="card p-4 mx-auto" style="max-width: 600px; box-shadow: 0 4px 8px rgba(0,0,0,0.2), 0 6px 20px rgba(0,0,0,0.19);">
+        <h2 class="card-title text-center mb-4">Add New Asset</h2>
 
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    <table>
-        <tr>
-            <td>{{ form.category.label_tag }}</td>
-            <td>{{ form.category }}</td>
+        {# Display messages from Django's messages framework #}
+        {% if messages %}
+            <div class="mb-3">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
 
-        </t r>
-        <tr>
-            <td>{{ form.item_name.label_tag }}</td>
-            <td>{{ form.item_name }}</td>
-        </tr>
-        <tr>
-            <td>{{ form.uid_no.label_tag }}</td>
-            <td>{{ form.uid_no }}</td>
-        </tr>
-        <tr>
-            <td>{{ form.serial_number.label_tag }}</td>
-            <td>{{ form.serial_number }}</td>
-        </tr>
-        <tr>
-            <td>{{ form.quantity.label_tag }}</td>
-            <td>{{ form.quantity }}</td>
-        </tr>
-        <tr>
-            <td>{{ form.location.label_tag }}</td>
-            <td>{{ form.location }}</td>
-        </tr>
-        <tr>
-            <td>{{ form.status.label_tag }}</td>
-            <td>{{ form.status }}</td>
-        </tr>
-        <tr>
-            <td>{{ form.description.label_tag }}</td>
-            <td>{{ form.description }}</td>
-        </tr>
-        <tr>
-            <td>{{ form.document.label_tag }}</td>
-            <td>{{ form.document }}</td>
-        </tr>
-        <tr>
-            <td>{{ form.image.label_tag }}</td>
-            <td>{{ form.image }}</td>
-        </tr>
-    </table>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <table class="table table-borderless">
+                {# The `##` from your image_fa90ea.png has been removed. It was likely a stray character in your template. #}
 
-    <div style="margin-top: 15px;">
-        <button type="submit">Add Item</button>
-        <a href="{% url 'dashboard' %}">
-            <button type="button">Back to Dashboard</button>
-        </a>
+                <tr>
+                    <td><label for="{{ form.item_name.id_for_label }}" class="form-label">Item name:</label></td>
+                    <td>
+                        {{ form.item_name }}
+                        {% if form.item_name.errors %}<div class="text-danger small">{{ form.item_name.errors }}</div>{% endif %}
+                    </td>
+                </tr>
+                {# NEW: Add Category Field Here #}
+                <tr>
+                    <td><label for="{{ form.category.id_for_label }}" class="form-label">Category:</label></td>
+                    <td>
+                        {{ form.category }}
+                        {% if form.category.errors %}<div class="text-danger small">{{ form.category.errors }}</div>{% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="{{ form.uid_no.id_for_label }}" class="form-label">UID Number:</label></td>
+                    <td>
+                        {{ form.uid_no }}
+                        {% if form.uid_no.errors %}<div class="text-danger small">{{ form.uid_no.errors }}</div>{% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="{{ form.serial_number.id_for_label }}" class="form-label">Serial number:</label></td>
+                    <td>
+                        {{ form.serial_number }}
+                        {% if form.serial_number.errors %}<div class="text-danger small">{{ form.serial_number.errors }}</div>{% endif %}
+                    </td>
+                </tr>
+
+                {# --- CORRECTION: ADDED QUANTITY FIELD HERE --- #}
+                <tr>
+                    <td><label for="{{ form.quantity.id_for_label }}" class="form-label">Quantity:</label></td>
+                    <td>
+                        {{ form.quantity }}
+                        {% if form.quantity.errors %}<div class="text-danger small">{{ form.quantity.errors }}</div>{% endif %}
+                    </td>
+                </tr>
+                {# --- END CORRECTION --- #}
+
+                <tr>
+                    <td><label for="{{ form.location.id_for_label }}" class="form-label">Location:</label></td>
+                    <td>
+                        {{ form.location }}
+                        {% if form.location.errors %}<div class="text-danger small">{{ form.location.errors }}</div>{% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="{{ form.status.id_for_label }}" class="form-label">Status:</label></td>
+                    <td>
+                        {{ form.status }}
+                        {% if form.status.errors %}<div class="text-danger small">{{ form.status.errors }}</div>{% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="{{ form.description.id_for_label }}" class="form-label">Description:</label></td>
+                    <td>
+                        {{ form.description }}
+                        {% if form.description.errors %}<div class="text-danger small">{{ form.description.errors }}</div>{% endif %}
+                    </td>
+                </tr>
+
+                {# ADDED NEW FIELDS HERE (CPU, GPU, OS, INSTALLED_SOFTWARE) #}
+                <tr>
+                    <td><label for="{{ form.cpu.id_for_label }}" class="form-label">CPU:</label></td>
+                    <td>
+                        {{ form.cpu }}
+                        {% if form.cpu.errors %}<div class="text-danger small">{{ form.cpu.errors }}</div>{% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="{{ form.gpu.id_for_label }}" class="form-label">GPU:</label></td>
+                    <td>
+                        {{ form.gpu }}
+                        {% if form.gpu.errors %}<div class="text-danger small">{{ form.gpu.errors }}</div>{% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="{{ form.os.id_for_label }}" class="form-label">OS:</label></td>
+                    <td>
+                        {{ form.os }}
+                        {% if form.os.errors %}<div class="text-danger small">{{ form.os.errors }}</div>{% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="{{ form.installed_software.id_for_label }}" class="form-label">Installed Software:</label></td>
+                    <td>
+                        {{ form.installed_software }}
+                        {% if form.installed_software.errors %}<div class="text-danger small">{{ form.installed_software.errors }}</div>{% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="{{ form.project.id_for_label }}" class="form-label">Project:</label></td>
+                    <td>
+                        {{ form.project }}
+                        {% if form.project.errors %}<div class="text-danger small">{{ form.project.errors }}</div>{% endif %}
+                    </td>
+                </tr>
+                {# END NEW FIELDS #}
+
+                <tr>
+                    <td><label for="{{ form.document.id_for_label }}" class="form-label">Document:</label></td>
+                    <td>
+                        {{ form.document }}
+                        {% if form.document.errors %}<div class="text-danger small">{{ form.document.errors }}</div>{% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="{{ form.image.id_for_label }}" class="form-label">Image:</label></td>
+                    <td>
+                        {{ form.image }}
+                        {% if form.image.errors %}<div class="text-danger small">{{ form.image.errors }}</div>{% endif %}
+                    </td>
+                </tr>
+
+                {# If you have any non-field errors, display them here #}
+                {% if form.non_field_errors %}
+                    <tr>
+                        <td colspan="2">
+                            <div class="alert alert-danger" role="alert">
+                                {{ form.non_field_errors }}
+                            </div>
+                        </td>
+                    </tr>
+                {% endif %}
+            </table>
+
+            <div class="d-flex justify-content-between mt-4">
+                <button type="submit" class="btn btn-primary">Add Item</button>
+                <a href="{% url 'inventory:dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+            </div>
+        </form>
     </div>
-</form>
+</div>
 {% endblock %}
-

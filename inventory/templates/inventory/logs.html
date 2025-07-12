@@ -1,0 +1,55 @@
+{# inventory/templates/inventory/logs.html #}
+{% extends 'inventory/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4 text-center">Inventory Logs</h2>
+
+    {% if messages %}
+        <div class="mb-3">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>User</th>
+                    <th>Item UID</th>
+                    <th>Item Name</th>
+                    <th>Action</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                <tr>
+                    <td>{{ log.timestamp|date:"Y-m-d H:i:s" }}</td>
+                    <td>{{ log.user.username|default:"System" }}</td> {# Display username, or "System" if no user #}
+                    <td>{{ log.item.uid_no|default:"N/A" }}</td>
+                    <td>{{ log.item.item_name|default:"N/A" }}</td>
+                    <td>{{ log.action }}</td>
+                    <td>{{ log.details|default:"-" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center">No log entries found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{% url 'inventory:dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

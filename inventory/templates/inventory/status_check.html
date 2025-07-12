@@ -1,0 +1,102 @@
+{% extends 'inventory/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+<h2 style="margin-bottom: 20px; text-align: center;">Status - Check Item Status</h2>
+
+{% if messages %}
+    <div class="messages-container mb-3">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<div class="row justify-content-center">
+    <div class="col-md-4"> {# Ensure this col-md-X matches your modify_item.html for consistent size #}
+        <div class="card shadow-sm p-4 mb-4">
+            <form method="GET" action="{% url 'inventory:status_check' %}">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="{{ form.uid_no.id_for_label }}">UID No.:</label>
+                    {% render_field form.uid_no class="form-control" placeholder="Enter UID" %}
+                    {% if form.uid_no.errors %}
+                        <div class="invalid-feedback d-block">
+                            {% for error in form.uid_no.errors %}{{ error }}{% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary">Check Status</button>
+                    <a href="{% url 'inventory:dashboard' %}" class="btn btn-secondary ml-2">Back to Dashboard</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% if item_status_data %}
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-8"> {# Adjust column width as needed for the table #}
+            <div class="card shadow-sm p-4">
+                <h3>Item Status Details</h3>
+                <table class="table table-bordered table-striped">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Item Name</th>
+                            <th>UID No</th>
+                            <th>Serial Number</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                            <th>Description</th>
+                            <th>Project</th>
+                            <th>Document</th>
+                            <th>Image</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ item_status_data.item_name }}</td>
+                            <td>{{ item_status_data.uid_no }}</td>
+                            <td>{{ item_status_data.serial_number|default:'N/A' }}</td>
+                            <td>{{ item_status_data.location.name|default:'N/A' }}</td>
+                            <td>{{ item_status_data.status }}</td>
+                            <td>{{ item_status_data.description|default:'N/A' }}</td>
+                            <td>{{ item_status_data.project.name|default:'N/A' }}</td>
+                            <td>{% if item_status_data.document %}<a href="{{ item_status_data.document.url }}" target="_blank">Doc</a>{% else %}No Doc{% endif %}</td>
+                            <td>{% if item_status_data.image %}<img src="{{ item_status_data.image.url }}" style="max-height:50px;object-fit:cover;">{% else %}No Image{% endif %}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                {# The div containing the Edit Item and Delete Item buttons has been removed from here. #}
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const messageContainers = document.querySelectorAll('.alert');
+        messageContainers.forEach(container => {
+            setTimeout(() => {
+                if (typeof jQuery !== 'undefined' && typeof jQuery.fn.alert !== 'undefined') {
+                    $(container).alert('close');
+                } else {
+                    container.style.display = 'none';
+                }
+            }, 5000);
+        });
+    });
+</script>
+{% endblock %}

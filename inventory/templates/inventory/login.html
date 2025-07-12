@@ -77,15 +77,14 @@
             {% endfor %}
         {% endif %}
 
-        <form method="POST">
+        <form method="post" action="{% url 'inventory:login' %}">
             {% csrf_token %}
             {{ form.as_p }}
             <button type="submit">Login</button>
-        </form>
-        
+          </form>
 
         
-        <a href="{% url 'register' %}">Don't have an account? Register here</a>
+        <a href="{% url 'inventory:register' %}">Don't have an account? Register here</a>
     </div>
 </div>
 {% endblock %}

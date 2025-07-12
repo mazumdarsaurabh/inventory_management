@@ -1,0 +1,119 @@
+{% extends 'inventory/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header">
+            <h4>Details for {{ item.item_name }} (UID: {{ item.uid_no|default:"N/A" }})</h4>
+        </div>
+        <div class="card-body">
+            <form>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Item Name</label>
+                        <input type="text" class="form-control" value="{{ item.item_name }}" readonly>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">CPU</label>
+                        <input type="text" class="form-control" value="{{ item.cpu|default:'N/A' }}" readonly>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">GPU</label>
+                        <input type="text" class="form-control" value="{{ item.gpu|default:'N/A' }}" readonly>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Category</label>
+                        <input type="text" class="form-control" value="{{ item.category|default:'N/A' }}" readonly>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">UID No</label>
+                        <input type="text" class="form-control" value="{{ item.uid_no|default:'N/A' }}" readonly>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Serial Number</label>
+                        <input type="text" class="form-control" value="{{ item.serial_number|default:'N/A' }}" readonly>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Operating System</label>
+                        <input type="text" class="form-control" value="{{ item.operating_system|default:'N/A' }}" readonly>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Installed Software</label>
+                        <input type="text" class="form-control" value="{{ item.installed_software|default:'N/A' }}" readonly>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Quantity</label>
+                        <input type="text" class="form-control" value="{{ item.quantity }}" readonly>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Location</label>
+                        <input type="text" class="form-control" value="{{ item.location|default:'N/A' }}" readonly>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Status</label>
+                        <input type="text" class="form-control" value="{{ item.status }}" readonly>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Project</label>
+                        <input type="text" class="form-control" value="{{ item.project|default:'N/A' }}" readonly>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Date Added</label>
+                        <input type="text" class="form-control" value="{{ item.date_added|date:'F d, Y H:i' }}" readonly>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Last Modified</label>
+                        <input type="text" class="form-control" value="{{ item.last_modified|date:'F d, Y H:i' }}" readonly>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-control" rows="2" readonly>{{ item.description|default:'N/A' }}</textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Document</label>
+                    {% if item.document %}
+                        <p><a href="{{ item.document.url }}" target="_blank" class="btn btn-outline-primary btn-sm">Download Document</a></p>
+                    {% else %}
+                        <input type="text" class="form-control" value="No Document" readonly>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Image</label><br>
+                    {% if item.image %}
+                        <img src="{{ item.image.url }}" class="img-thumbnail" style="max-height:150px;">
+                    {% else %}
+                        <input type="text" class="form-control" value="No Image" readonly>
+                    {% endif %}
+                </div>
+
+                <div class="mt-4">
+                    
+                    <a href="{% url 'inventory:dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

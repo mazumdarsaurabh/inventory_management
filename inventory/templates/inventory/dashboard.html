@@ -1,74 +1,221 @@
 {% extends 'inventory/base.html' %}
 {% load static %}
+{% load widget_tweaks %}
 
 {% block content %}
 
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+{% if messages %}
+    <div class="messages-container mb-3">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
 
-<div class="dashboard-container" style="padding: 20px;">
-
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <div>
-            <a href="{% url 'add_item' %}" class="btn btn-primary">Add New Item</a>
-            <a href="{% url 'delete_item_general' %}" class="btn btn-danger">Delete Item</a>
-            <a href="{% url 'status_item_general' %}" class="btn btn-warning">Status</a>
-            <a href="{% url 'modify_item' %}" class="btn btn-info">Modify Item</a>
-            <a href="{% url 'export_inventory_excel' %}" class="btn btn-secondary">Export to Excel</a>
+<div class="modal fade" id="transferModal" tabindex="-1" role="dialog" aria-labelledby="transferModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="transferModalLabel">Transfer Selected Assets</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="transferFormModal" method="post">
+                    {% csrf_token %}
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-sm">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Item Name</th>
+                                    <th>Serial Number</th>
+                                    <th>Current Location</th>
+                                    <th>New Location</th>
+                                    <th>Project</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transferItemsBody">
+                                <!-- Filled dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="confirmTransferBtn">Confirm Transfer</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
+</div>
 
-    <table id="inventoryTable" class="display" style="width:100%">
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <a href="{% url 'inventory:add_item' %}" class="btn btn-primary">Add New Asset</a>
+        <a href="{% url 'inventory:delete_item_general' %}" class="btn btn-danger">Delete Asset</a>
+        <a href="{% url 'inventory:status_check' %}" class="btn btn-warning">Status</a>
+        <a href="{% url 'inventory:modify_item_search' %}" class="btn btn-info">Modify Asset</a>
+        <a href="{% url 'inventory:export_inventory_excel' %}" class="btn btn-secondary">Export to Excel</a>
+        <button type="button" id="openTransferModalBtn" class="btn btn-success ml-2" disabled>Transfer Asset</button>
+    </div>
+    <form method="get" action="{% url 'inventory:dashboard' %}" class="form-inline">
+        <div class="form-group">
+            {% render_field filter_form.search class="form-control" placeholder="Search by Name, UID, S/N etc." %}
+        </div>
+    </form>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover">
         <thead>
             <tr>
+                <th><input type="checkbox" id="selectAll"></th>
                 <th>Item Name</th>
-                <th>UID No</th>
+                <th>UID</th>
                 <th>Serial Number</th>
                 <th>Quantity</th>
                 <th>Location</th>
                 <th>Status</th>
                 <th>Description</th>
-                <th>Document</th>
+                <th>Doc</th>
                 <th>Image</th>
             </tr>
         </thead>
         <tbody>
             {% for item in items %}
-            <tr>
-                <td>{{ item.item_name }}</td>
+            <tr data-item-id="{{ item.id }}"
+                data-item-name="{{ item.item_name }}"
+                data-serial-number="{{ item.serial_number|default:'N/A' }}"
+                data-current-location="{{ item.location.name|default:'N/A' }}"
+                data-current-location-id="{{ item.location.id|default:'' }}"
+                data-current-project-id="{{ item.project.id|default:'' }}">
+                <td><input type="checkbox" class="select-item"></td>
+                <td><a href="{% url 'inventory:item_details' item.id %}">{{ item.item_name }}</a></td>
                 <td>{{ item.uid_no }}</td>
-                <td>{{ item.serial_number }}</td>
+                <td>{{ item.serial_number|default:'N/A' }}</td>
                 <td>{{ item.quantity }}</td>
-                <td>{{ item.location }}</td>
+                <td>{{ item.location.name }}</td>
                 <td>{{ item.status }}</td>
                 <td>{{ item.description }}</td>
-                <td>
-                    {% if item.document %}
-                        <a href="{{ item.document.url }}" target="_blank">View Document</a>
-                    {% else %}
-                        No Doc
-                    {% endif %}
-                </td>
-                <td>
-                    {% if item.image %}
-                        <img src="{{ item.image.url }}" width="50" alt="Image of {{ item.item_name }}">
-                    {% else %}
-                        No Image
-                    {% endif %}
-                </td>
+                <td>{% if item.document %}<a href="{{ item.document.url }}" target="_blank">Doc</a>{% else %}No Doc{% endif %}</td>
+                <td>{% if item.image %}<img src="{{ item.image.url }}" style="max-height:50px;">{% else %}No Img{% endif %}</td>
             </tr>
+            {% empty %}
+            <tr><td colspan="10" class="text-center">No items found.</td></tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
 
+{% endblock %}
+
+{% block extra_js %}
 <script>
-    $(document).ready(function () {
-        var table = $('#inventoryTable').DataTable({
-            fixedHeader: true,
+document.addEventListener('DOMContentLoaded', function() {
+    const selectAll = document.getElementById('selectAll');
+    const checkboxes = Array.from(document.querySelectorAll('.select-item'));
+    const openTransferBtn = document.getElementById('openTransferModalBtn');
+    const transferItemsBody = document.getElementById('transferItemsBody');
+
+    function toggleButton() {
+        openTransferBtn.disabled = !checkboxes.some(cb => cb.checked);
+    }
+
+    selectAll.addEventListener('change', () => {
+        checkboxes.forEach(cb => cb.checked = selectAll.checked);
+        toggleButton();
+    });
+    checkboxes.forEach(cb => cb.addEventListener('change', toggleButton));
+    toggleButton();
+
+    openTransferBtn.addEventListener('click', () => {
+        transferItemsBody.innerHTML = '';
+
+        const locationOptions = `{% for loc in locations %}<option value="{{ loc.id }}">{{ loc.name }}</option>{% endfor %}`;
+        const projectOptions = `{% for proj in projects %}<option value="{{ proj.id }}">{{ proj.name }}</option>{% endfor %}`;
+
+        document.querySelectorAll('.select-item:checked').forEach(cb => {
+            const row = cb.closest('tr');
+            const id = row.dataset.itemId;
+            const name = row.dataset.itemName;
+            const sn = row.dataset.serialNumber;
+            const currLoc = row.dataset.currentLocation;
+            const currLocId = row.dataset.currentLocationId;
+            const currProjId = row.dataset.currentProjectId;
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${name}</td>
+                <td>${sn}</td>
+                <td>${currLoc}</td>
+                <td>
+                    <select id="new_location_${id}" name="new_location_${id}" class="form-control" required>
+                        <option value="">Select Location</option>${locationOptions}
+                    </select>
+                </td>
+                <td>
+                    <select id="project_id_${id}" name="project_id_${id}" class="form-control">
+                        <option value="">Select Project</option>${projectOptions}
+                    </select>
+                </td>
+            `;
+            transferItemsBody.appendChild(tr);
+
+            const locSelect = tr.querySelector(`#new_location_${id}`);
+            const projSelect = tr.querySelector(`#project_id_${id}`);
+            
+            locSelect.value = "";
+        });
+
+        $('#transferModal').modal('show');
+    });
+
+    document.getElementById('confirmTransferBtn').addEventListener('click', function(e) {
+        e.preventDefault();
+        const data = [];
+        let valid = true;
+
+        transferItemsBody.querySelectorAll('tr').forEach(tr => {
+            const id = tr.querySelector('select').id.split('_')[2];
+            const loc = document.getElementById(`new_location_${id}`).value;
+            const proj = document.getElementById(`project_id_${id}`).value || null;
+
+            if (!loc) {
+                document.getElementById(`new_location_${id}`).classList.add('is-invalid');
+                valid = false;
+            } else {
+                document.getElementById(`new_location_${id}`).classList.remove('is-invalid');
+            }
+
+            data.push({ id, new_location: loc, project_id: proj });
+        });
+
+        if (!valid) {
+            alert("Please select new locations for all items.");
+            return;
+        }
+
+        fetch('{% url "inventory:transfer_inventory_items" %}', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value },
+            body: JSON.stringify({ items: data })
+        })
+        .then(resp => resp.json())
+        .then(data => {
+            alert(data.message || "Transfer complete.");
+            if (data.success) location.reload();
+        })
+        .catch(err => {
+            console.error(err);
+            alert("Error during transfer.");
         });
     });
+});
 </script>
-
 {% endblock %}
